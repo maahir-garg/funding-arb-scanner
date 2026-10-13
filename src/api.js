@@ -2,10 +2,12 @@
 
 const BINANCE = 'https://fapi.binance.com';
 const HYPERLIQUID = 'https://api.hyperliquid.xyz/info';
-const DAY_MS = 86_400_000;
+const TIMEOUT_MS = 10_000;
+const HOUR_MS = 3_600_000;
+const HISTORY_DAYS = 7;
 
-async function getJson(url, options) {
-  const res = await fetch(url, options);
+async function getJson(url, options = {}) {
+  const res = await fetch(url, { ...options, signal: AbortSignal.timeout(TIMEOUT_MS) });
   if (!res.ok) throw new Error(`${new URL(url).host} returned HTTP ${res.status}`);
   return res.json();
 }
@@ -38,10 +40,13 @@ export function fetchHyperliquid() {
   return hyperliquid({ type: 'metaAndAssetCtxs' });
 }
 
-export function fetchHistory(coin, symbol, days = 7) {
-  const startTime = Date.now() - days * DAY_MS;
+// Binance history starts 8 hours earlier, the longest interval, so the first payment
+// inside the window has an earlier one to measure its interval from.
+export function fetchHistory(coin, symbol) {
+  const startTime = Date.now() - HISTORY_DAYS * 24 * HOUR_MS;
+  const bnStart = startTime - 8 * HOUR_MS;
   return Promise.all([
     hyperliquid({ type: 'fundingHistory', coin, startTime }),
-    binance(`/fapi/v1/fundingRate?symbol=${encodeURIComponent(symbol)}&startTime=${startTime}&limit=1000`),
+    binance(`/fapi/v1/fundingRate?symbol=${encodeURIComponent(symbol)}&startTime=${bnStart}&limit=1000`),
   ]);
 }

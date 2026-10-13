@@ -18,24 +18,24 @@ To deploy, import the repo into Vercel with no settings changed. Requests go fro
 
 ## How it works
 
-Every 30 seconds the page calls six public endpoints. No API keys are needed.
+The page calls six public endpoints when it loads, then the five that change every 30 seconds. No API keys are needed.
 
 | Exchange | Endpoint | Used for |
 |---|---|---|
 | Binance | `GET /fapi/v1/premiumIndex` | Predicted funding and mark price for every perpetual |
-| Binance | `GET /fapi/v1/fundingInfo` | Funding interval (1, 4 or 8 hours) and cap per symbol |
+| Binance | `GET /fapi/v1/fundingInfo` | Funding interval of 1, 4 or 8 hours, and cap, per symbol |
 | Binance | `GET /fapi/v1/exchangeInfo` | Which symbols are trading. Fetched once per page load |
 | Binance | `GET /fapi/v1/ticker/24hr` | 24h volume and price change |
 | Binance | `GET /fapi/v1/ticker/bookTicker` | Best bid and ask |
 | Hyperliquid | `POST /info {"type":"metaAndAssetCtxs"}` | Hourly funding, mark price, impact prices and volume for every coin |
 
-Clicking a coin also fetches its last 7 days of funding history from both exchanges.
+Clicking a coin fetches its last 7 days of funding history from both exchanges and lines the two up hour by hour. A Binance payment covering 8 hours counts as an eighth of the payment in each of those hours.
 
 The steps live in `src/scanner.js` as pure functions:
 
 1. **Parse.** Keep Binance USDT perpetuals that are trading and Hyperliquid coins that aren't delisted.
 2. **Match.** Pair each Hyperliquid coin with its Binance symbol. Hyperliquid's `kPEPE` is 1,000 PEPE, and so is Binance's `1000PEPEUSDT`. A pair only counts if the price per coin agrees within 5%, which catches contracts of different sizes and unrelated tokens that share a ticker.
-3. **Normalise.** Hyperliquid pays every hour. Binance pays every 1, 4 or 8 hours depending on the symbol. Both are converted to an hourly rate.
+3. **Normalise.** Hyperliquid quotes an hourly rate already. Binance pays every 1, 4 or 8 hours depending on the symbol, so the scanner divides each Binance rate by its interval.
 4. **Score.** For each pair:
    - spread per year = |hourly gap| × 8,760
    - cost = 2 × (Binance fee + Hyperliquid fee) + bid-ask spread on each exchange
@@ -43,14 +43,14 @@ The steps live in `src/scanner.js` as pure functions:
    - net per year = (hourly gap × hold hours − cost) ÷ hold hours × 8,760
 5. **Flag** spreads that usually mean a market in trouble:
    - either side paying 0.01% an hour or more;
-   - Binance funding near its cap;
-   - Binance switched to hourly funding;
+   - Binance funding at 80% or more of its cap;
+   - Binance paying the coin every hour;
    - a 15% price move in 24 hours.
 
 Two details catch people out:
 
 - Binance's `lastFundingRate` field is the predicted next payment, not the last one paid.
-- Hyperliquid pays funding on its oracle price, Binance on its mark price. The difference is small but real.
+- Hyperliquid pays funding on its oracle price, Binance on its mark price.
 
 ## What it doesn't do
 

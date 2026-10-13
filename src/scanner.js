@@ -1,15 +1,15 @@
 // Turns raw exchange responses into ranked funding spreads.
 // Pure functions only, no network and no DOM, so every step can be tested.
 
-export const HOURS_PER_YEAR = 24 * 365;
+const HOURS_PER_YEAR = 24 * 365;
 const HOUR_MS = 3_600_000;
 
 // Two listings count as the same coin only if their prices agree within 5%.
 const PRICE_TOLERANCE = 0.05;
 
 // Flag thresholds.
-const NEAR_CAP = 0.8; // Binance funding at 80% or more of its cap
 const EXTREME = 0.0001; // either side paying 0.01% an hour or more, 8 times the normal rate
+const NEAR_CAP = 0.8; // Binance funding at 80% or more of its cap
 const BIG_MOVE = 0.15; // price moved 15% or more in 24 hours
 
 export function parseBinance({ exchangeInfo, premiumIndex, fundingInfo, tickers, bookTickers }) {
@@ -25,8 +25,9 @@ export function parseBinance({ exchangeInfo, premiumIndex, fundingInfo, tickers,
   const markets = new Map();
   for (const p of premiumIndex) {
     const t = ticker.get(p.symbol);
-    const b = book.get(p.symbol);
-    if (!perpetuals.has(p.symbol) || !t || !(Number(b?.bidPrice) > 0 && Number(b?.askPrice) > 0)) continue;
+    const bid = Number(book.get(p.symbol)?.bidPrice);
+    const ask = Number(book.get(p.symbol)?.askPrice);
+    if (!perpetuals.has(p.symbol) || !t || !(bid > 0 && ask > 0)) continue;
 
     const intervalHours = info.get(p.symbol)?.fundingIntervalHours ?? 8; // 8 hours is Binance's default
     const rate = Number(p.lastFundingRate); // despite the name, this is the predicted next payment
@@ -39,16 +40,16 @@ export function parseBinance({ exchangeInfo, premiumIndex, fundingInfo, tickers,
       cap: info.has(p.symbol) ? Number(info.get(p.symbol).adjustedFundingRateCap) : null,
       volume: Number(t.quoteVolume),
       change24h: Number(t.priceChangePercent) / 100,
-      spread: relativeSpread(Number(b.bidPrice), Number(b.askPrice)),
+      spread: relativeSpread(bid, ask),
     });
   }
   return markets;
 }
 
 // Input is the [meta, assetContexts] pair from Hyperliquid's metaAndAssetCtxs.
-// The two arrays line up by index. Funding there is already an hourly rate.
-// Bid and ask are Hyperliquid's impact prices: the average fill for a $20,000 order
-// on BTC and ETH and $6,000 on everything else.
+// The two arrays line up by index, and funding there is already an hourly rate.
+// Bid and ask are Hyperliquid's impact prices, the average fill for a $20,000 order
+// on BTC and ETH and a $6,000 order on everything else.
 export function parseHyperliquid([meta, contexts]) {
   const markets = new Map();
   meta.universe.forEach((asset, i) => {
@@ -67,8 +68,8 @@ export function parseHyperliquid([meta, contexts]) {
 }
 
 // Binance symbols that could be the same coin as a Hyperliquid name, with how many
-// coins one unit of each contract represents. Hyperliquid's "kPEPE" is 1,000 PEPE,
-// Binance's "1000PEPEUSDT" is also 1,000 PEPE.
+// coins one contract unit holds on each side. Hyperliquid's kPEPE is 1,000 PEPE,
+// and so is Binance's 1000PEPEUSDT.
 export function binanceCandidates(hyperliquidName) {
   const thousands = /^k[A-Z0-9]/.test(hyperliquidName);
   const base = thousands ? hyperliquidName.slice(1) : hyperliquidName;
@@ -76,36 +77,32 @@ export function binanceCandidates(hyperliquidName) {
   return [
     { symbol: `${base}USDT`, bnUnit: 1, hlUnit },
     { symbol: `1000${base}USDT`, bnUnit: 1000, hlUnit },
-    { symbol: `1000000${base}USDT`, bnUnit: 1_000_000, hlUnit },
-    { symbol: `1M${base}USDT`, bnUnit: 1_000_000, hlUnit },
   ];
 }
 
-// Pairs each Hyperliquid coin with its Binance perpetual. A name match alone is not
-// enough: the price per coin must also agree, which catches contracts of different sizes
-// and unrelated tokens that share a ticker.
+// Pairs each Hyperliquid coin with its Binance perpetual. The price per coin must
+// agree as well as the name, which catches contracts of different sizes and
+// unrelated tokens that share a ticker.
 export function matchMarkets(binance, hyperliquid) {
   const pairs = [];
-  const unmatched = [];
   for (const hl of hyperliquid.values()) {
     const match = binanceCandidates(hl.name).find(({ symbol, bnUnit, hlUnit }) => {
       const bn = binance.get(symbol);
       return bn && Math.abs(bn.price / bnUnit / (hl.price / hlUnit) - 1) <= PRICE_TOLERANCE;
     });
     if (match) pairs.push({ coin: hl.name, hl, bn: binance.get(match.symbol) });
-    else unmatched.push(hl.name);
   }
-  return { pairs, unmatched };
+  return pairs;
 }
 
 // Fees are fractions per trade, e.g. 0.0005 for 0.05%.
 export function score({ coin, hl, bn }, { binanceFee, hyperliquidFee, holdHours }) {
-  // Short the exchange with the higher rate: shorts receive positive funding
-  // and longs receive negative funding, so the gap is earned either way.
+  // Short the exchange with the higher rate. Shorts receive positive funding and
+  // longs receive negative funding, so the gap is earned whichever way it points.
   const shortHyperliquid = hl.hourly > bn.hourly;
   const spreadHourly = Math.abs(hl.hourly - bn.hourly);
-  // Four trades (open and close on both exchanges), plus crossing the bid-ask
-  // on each exchange: half the spread going in and half coming out.
+  // Four trades, opening and closing on both exchanges. Each exchange also costs its
+  // bid-ask spread, half of it going in and half coming out.
   const cost = 2 * (binanceFee + hyperliquidFee) + bn.spread + hl.spread;
   return {
     coin,
@@ -138,16 +135,18 @@ export function rank(pairs, { minVolume = 0, query = '', ...settings }) {
     .sort((a, b) => b.netApr - a.netApr);
 }
 
-// Puts both exchanges on one hourly grid. A Binance payment of r covering n hours
-// counts as r / n for each of those hours. Each point is keyed by the hour it ends.
-export function hourlySeries(hlHistory, bnHistory, bnIntervalHours) {
+// Puts both exchanges on one hourly grid, each point keyed by the hour it ends.
+// A Binance payment of r counts as r / n for each of the n hours since the payment
+// before it. The first payment only marks where the second one's hours begin, so
+// the caller should fetch Binance history from one interval earlier.
+export function hourlySeries(hlHistory, bnHistory) {
   const hl = new Map(hlHistory.map((h) => [Math.floor(h.time / HOUR_MS), Number(h.fundingRate)]));
   const bn = new Map();
-  bnHistory.forEach((p, i) => {
-    const end = Math.floor(p.fundingTime / HOUR_MS);
-    const n = i > 0 ? Math.round((p.fundingTime - bnHistory[i - 1].fundingTime) / HOUR_MS) : bnIntervalHours;
-    for (let h = end - n + 1; h <= end; h++) bn.set(h, Number(p.fundingRate) / n);
-  });
+  for (let i = 1; i < bnHistory.length; i++) {
+    const end = Math.floor(bnHistory[i].fundingTime / HOUR_MS);
+    const n = Math.round((bnHistory[i].fundingTime - bnHistory[i - 1].fundingTime) / HOUR_MS);
+    for (let h = end - n + 1; h <= end; h++) bn.set(h, Number(bnHistory[i].fundingRate) / n);
+  }
   return [...hl.keys()]
     .filter((h) => bn.has(h))
     .sort((a, b) => a - b)
@@ -155,15 +154,18 @@ export function hourlySeries(hlHistory, bnHistory, bnIntervalHours) {
 }
 
 // How the trade, held in today's direction, would have done over the series.
+// Hours where both exchanges paid the same count neither for nor against.
 export function summarise(series, shortHyperliquid) {
   const sign = shortHyperliquid ? 1 : -1;
   const gaps = series.map((p) => sign * (p.hl - p.bn));
   const total = gaps.reduce((a, b) => a + b, 0);
+  const share = (test) => (gaps.length ? gaps.filter(test).length / gaps.length : 0);
   return {
     hours: gaps.length,
-    earned: total, // fraction of position size
+    earned: total, // as a fraction of position size
     averageApr: gaps.length ? (total / gaps.length) * HOURS_PER_YEAR : 0,
-    sameDirection: gaps.length ? gaps.filter((g) => g > 0).length / gaps.length : 0,
+    paid: share((g) => g > 0),
+    against: share((g) => g < 0),
   };
 }
 

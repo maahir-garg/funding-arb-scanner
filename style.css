@@ -1,8 +1,10 @@
 :root {
+  color-scheme: light dark;
   --bg: #fbfbf9;
   --fg: #1b1b1b;
   --muted: #6b6b6b;
   --line: #e4e4df;
+  --control: #8a8a85;
   --row-open: #f1f0ea;
   --pos: #137a3c;
   --neg: #b42318;
@@ -18,6 +20,7 @@
     --fg: #ececec;
     --muted: #9a9a9a;
     --line: #2c2c2c;
+    --control: #6a6a6a;
     --row-open: #1f1f1f;
     --pos: #4ade80;
     --neg: #f87171;
@@ -66,7 +69,7 @@ header p { margin: 4px 0; }
   font: inherit;
   color: var(--fg);
   background: var(--bg);
-  border: 1px solid var(--line);
+  border: 1px solid var(--control);
   border-radius: 6px;
 }
 
@@ -86,9 +89,6 @@ th, td {
 }
 
 th {
-  position: sticky;
-  top: 0;
-  background: var(--bg);
   font-size: 13px;
   font-weight: 600;
   color: var(--muted);
@@ -108,7 +108,15 @@ td small {
   color: var(--muted);
 }
 
-.coin { font-weight: 600; }
+button.coin {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
 
 .flag {
   display: inline-block;
@@ -125,6 +133,13 @@ tr.detail td {
   background: var(--row-open);
   white-space: normal;
   padding: 16px 20px 20px;
+}
+
+/* Keeps the history in view when the table is wider than the screen. */
+.detail-body {
+  position: sticky;
+  left: 20px;
+  max-width: calc(100vw - 72px);
 }
 
 .stats {
@@ -154,6 +169,10 @@ tr.detail td {
 .chart .bn { stroke: var(--bn); }
 .chart .zero { stroke: var(--muted); stroke-dasharray: 4 4; }
 .chart text { fill: var(--muted); font-size: 14px; }
+
+@media (max-width: 700px) {
+  .secondary { display: none; }
+}
 
 footer {
   margin-top: 32px;
