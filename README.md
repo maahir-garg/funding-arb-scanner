@@ -2,6 +2,8 @@
 
 Compares perpetual futures funding rates on Binance and Hyperliquid for every coin listed on both, and ranks the gaps by what's left after trading costs.
 
+Live at https://funding-arb-scanner-omega.vercel.app
+
 Funding is the periodic payment between longs and shorts that keeps a perpetual's price near spot. Each exchange sets its own rate, so the same coin can pay differently on each. If you short the coin where funding is higher and go long where it's lower, the price moves cancel and you collect the difference. This page shows how big each difference is, what it costs to trade, and how long it has to last to pay for itself.
 
 ## Run it
