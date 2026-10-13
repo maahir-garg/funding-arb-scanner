@@ -1,0 +1,8 @@
+{
+  "name": "funding-arb-scanner",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test"
+  }
+}

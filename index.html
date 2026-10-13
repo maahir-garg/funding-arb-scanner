@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Funding spread scanner</title>
+  <meta name="description" content="Live funding rate spreads between Binance and Hyperliquid perpetuals, ranked after costs.">
+  <link rel="stylesheet" href="style.css">
+  <script type="module" src="src/app.js"></script>
+</head>
+<body>
+  <header>
+    <h1>Funding spread scanner</h1>
+    <p>Binance USDⓈ-M against Hyperliquid perpetuals, straight from each exchange's public API. Refreshes every 30 seconds.</p>
+    <p id="status" class="muted">Loading…</p>
+  </header>
+
+  <form id="settings">
+    <label>Search
+      <input id="search" type="search" placeholder="BTC" autocomplete="off">
+    </label>
+    <label>Binance fee per trade, %
+      <input id="binance-fee" type="number" value="0.05" min="0" step="0.005">
+    </label>
+    <label>Hyperliquid fee per trade, %
+      <input id="hyperliquid-fee" type="number" value="0.045" min="0" step="0.005">
+    </label>
+    <label>Hold for
+      <select id="hold">
+        <option value="24">1 day</option>
+        <option value="72" selected>3 days</option>
+        <option value="168">7 days</option>
+      </select>
+    </label>
+    <label>Min 24h volume, $M
+      <input id="min-volume" type="number" value="5" min="0" step="1">
+    </label>
+  </form>
+
+  <p id="summary" class="muted"></p>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th class="num">#</th>
+          <th>Coin</th>
+          <th>Trade</th>
+          <th class="num">Hyperliquid funding</th>
+          <th class="num">Binance funding</th>
+          <th class="num">Spread per year</th>
+          <th class="num">Costs</th>
+          <th class="num">Breakeven</th>
+          <th class="num">Net per year</th>
+          <th class="num">24h volume</th>
+          <th>Flags</th>
+        </tr>
+      </thead>
+      <tbody id="rows"></tbody>
+    </table>
+  </div>
+
+  <footer>
+    <h2>How to read this</h2>
+    <p>Funding is shown the way each exchange quotes it: Hyperliquid per hour, Binance per funding interval. Positive funding means longs pay shorts. Negative means shorts pay longs.</p>
+    <p><b>Spread per year</b> is the gap between the two hourly rates times 8,760 hours. You short the exchange with the higher rate and go long on the other, so price moves cancel and the gap is what you earn.</p>
+    <p><b>Costs</b> are four trades, opening and closing on both exchanges, plus crossing the bid-ask spread on each. <b>Breakeven</b> is how long the spread has to last to pay for them. <b>Net per year</b> is what's left if today's spread holds for the whole holding period. It usually doesn't, so click a coin to see its last 7 days.</p>
+    <p>Flags mark spreads that come from a market in trouble. <b>Extreme funding.</b> One side is paying 0.01% an hour or more, eight times the normal rate. <b>Near cap.</b> Binance funding is at 80% or more of its limit. <b>1h funding.</b> Binance pays this coin every hour, which usually means funding recently hit its limit. <b>Moved.</b> The price moved 15% or more in 24 hours.</p>
+    <p class="muted">Volume is the smaller of the two exchanges. The 24h volume filter drops coins too thin to trade. Not investment advice.</p>
+  </footer>
+</body>
+</html>
