@@ -137,14 +137,15 @@ export function rank(pairs, { minVolume = 0, query = '', ...settings }) {
 }
 
 // Puts both exchanges on one hourly grid, each point keyed by the hour it ends.
+// Timestamps land a few milliseconds either side of the hour, so they are rounded.
 // A Binance payment of r counts as r / n for each of the n hours since the payment
 // before it. The first payment only marks where the second one's hours begin, so
 // the caller should fetch Binance history from one interval earlier.
 export function hourlySeries(hlHistory, bnHistory) {
-  const hl = new Map(hlHistory.map((h) => [Math.floor(h.time / HOUR_MS), Number(h.fundingRate)]));
+  const hl = new Map(hlHistory.map((h) => [Math.round(h.time / HOUR_MS), Number(h.fundingRate)]));
   const bn = new Map();
   for (let i = 1; i < bnHistory.length; i++) {
-    const end = Math.floor(bnHistory[i].fundingTime / HOUR_MS);
+    const end = Math.round(bnHistory[i].fundingTime / HOUR_MS);
     const n = Math.round((bnHistory[i].fundingTime - bnHistory[i - 1].fundingTime) / HOUR_MS);
     for (let h = end - n + 1; h <= end; h++) bn.set(h, Number(bnHistory[i].fundingRate) / n);
   }

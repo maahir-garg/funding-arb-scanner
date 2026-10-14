@@ -143,7 +143,7 @@ test('hourly series spreads each Binance payment over the hours since the one be
     { fundingTime: t - 4 * H, fundingRate: '0.5' }, // before the window, only marks where the next one starts
     { fundingTime: t, fundingRate: '0.00016' }, // covers 4 hours
     { fundingTime: t + 4 * H + 3, fundingRate: '0.00008' }, // 4 hours, settled 3 ms late
-    { fundingTime: t + 5 * H, fundingRate: '0.00003' }, // switched to hourly
+    { fundingTime: t + 5 * H - 2, fundingRate: '0.00003' }, // switched to hourly, settled 2 ms early
   ];
   const series = hourlySeries(hl, bn);
   assert.deepEqual(series.map((p) => (p.time - t) / H), [1, 2, 3, 4, 5], 'hour 6 has no Binance payment yet');
