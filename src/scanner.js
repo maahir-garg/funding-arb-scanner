@@ -126,11 +126,12 @@ export function flags(hl, bn) {
   return out;
 }
 
+// Searching for a coin shows it even when it is below the volume filter.
 export function rank(pairs, { minVolume = 0, query = '', ...settings }) {
   const q = query.trim().toUpperCase();
   return pairs
-    .filter((p) => Math.min(p.hl.volume, p.bn.volume) >= minVolume)
-    .filter((p) => !q || p.coin.toUpperCase().includes(q) || p.bn.symbol.includes(q))
+    .filter((p) => (q ? p.coin.toUpperCase().includes(q) || p.bn.symbol.includes(q) : true))
+    .filter((p) => q || Math.min(p.hl.volume, p.bn.volume) >= minVolume)
     .map((p) => score(p, settings))
     .sort((a, b) => b.netApr - a.netApr);
 }

@@ -1,5 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 import {
   parseBinance,
   parseHyperliquid,
@@ -116,6 +117,22 @@ test('rank filters thin coins and sorts by net per year', () => {
   const rows = rank([mk('A', 0.00001, 1e7), mk('B', 0.00005, 1e7), mk('C', 0.001, 1e3)], { ...FEES, minVolume: 1e6 });
   assert.deepEqual(rows.map((r) => r.coin), ['B', 'A']);
   assert.deepEqual(rank([mk('A', 0, 1e7), mk('B', 0, 1e7)], { ...FEES, query: 'b' }).map((r) => r.coin), ['B']);
+  // A search finds a coin even when it is below the volume filter.
+  assert.deepEqual(rank([mk('C', 0.001, 1e3)], { ...FEES, minVolume: 1e6, query: 'c' }).map((r) => r.coin), ['C']);
+});
+
+test('the full pipeline runs on real responses recorded on 13 October', () => {
+  const raw = JSON.parse(readFileSync(new URL('./fixtures/recorded-2026-10-13.json', import.meta.url)));
+  const pairs = matchMarkets(parseBinance(raw.binance), parseHyperliquid(raw.hyperliquid));
+  assert.deepEqual(pairs.map((p) => p.coin).sort(), ['BTC', 'RSR', 'WLD', 'kPEPE'], 'the delisted coin is dropped');
+
+  const rows = rank(pairs, { ...FEES, minVolume: 0 });
+  rows.forEach((r) => assert.ok(Number.isFinite(r.netApr) && Number.isFinite(r.cost), `${r.coin} has finite numbers`));
+
+  const wld = rows.find((r) => r.coin === 'WLD');
+  assert.equal(wld.shortHyperliquid, true);
+  close(wld.spreadApr, (0.0000125 + 0.00014033 / 8) * 8760, 1e-6); // about 26.3% a year
+  assert.ok(rows.find((r) => r.coin === 'RSR').flags.includes('Extreme funding'));
 });
 
 test('hourly series spreads each Binance payment over the hours since the one before', () => {

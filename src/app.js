@@ -41,7 +41,14 @@ async function refresh() {
   }
 }
 
-async function load() {
+// One load at a time, so a tab coming back into view can't overlap the timer's load.
+let loading = null;
+function load() {
+  loading ??= fetchBoth().finally(() => (loading = null));
+  return loading;
+}
+
+async function fetchBoth() {
   const [bn, hl] = await Promise.allSettled([fetchBinance(), fetchHyperliquid()]);
   // On failure, keep showing the last good data for that exchange.
   if (bn.status === 'fulfilled') {
@@ -55,9 +62,12 @@ async function load() {
     delete state.errors.Hyperliquid;
   } else state.errors.Hyperliquid = hl.reason.message;
 
-  // Re-sorting under the pointer would move the row someone is about to click.
-  if ($('rows').matches(':hover')) state.stale = true;
-  else render();
+  // Re-sorting under the pointer would move the row someone is about to click,
+  // so only the status line updates until the pointer leaves the table.
+  if ($('rows').matches(':hover')) {
+    state.stale = true;
+    $('status').innerHTML = statusHtml();
+  } else render();
 }
 
 async function toggleDetail(coin, symbol) {
@@ -103,7 +113,8 @@ function statusHtml() {
 
 function rowHtml(r, i) {
   const open = r.coin === state.detail?.coin;
-  const trade = r.shortHyperliquid ? 'Short Hyperliquid<br>Long Binance' : 'Long Hyperliquid<br>Short Binance';
+  const trade =
+    r.spreadApr === 0 ? 'Same rate' : r.shortHyperliquid ? 'Short Hyperliquid<br>Long Binance' : 'Long Hyperliquid<br>Short Binance';
   const alias = r.bn.symbol === `${r.coin}USDT` ? '' : `<small>${esc(r.bn.symbol)}</small>`;
   return `<tr data-coin="${esc(r.coin)}" data-symbol="${esc(r.bn.symbol)}" class="${open ? 'open' : ''}">
     <td class="num muted secondary">${i + 1}</td>

@@ -31,7 +31,7 @@ The page calls six public endpoints when it loads, then the five that change eve
 | Binance | `GET /fapi/v1/ticker/bookTicker` | Best bid and ask |
 | Hyperliquid | `POST /info {"type":"metaAndAssetCtxs"}` | Hourly funding, mark price, impact prices and volume for every coin |
 
-Clicking a coin fetches its last 7 days of funding history from both exchanges and lines the two up hour by hour. A Binance payment covering 8 hours counts as an eighth of the payment in each of those hours.
+Clicking a coin calls two more endpoints for its last 7 days of funding, Binance `GET /fapi/v1/fundingRate` and Hyperliquid `POST /info {"type":"fundingHistory"}`, and lines the two up hour by hour. A Binance payment covering 8 hours counts as an eighth of the payment in each of those hours. Searching for a coin by name shows it even if it is below the volume filter.
 
 The steps live in `src/scanner.js` as pure functions:
 
@@ -59,6 +59,7 @@ Two details catch people out:
 - **Spreads fade.** The ranking assumes today's spread lasts for the holding period, and it usually shrinks. The 7-day view on each coin shows by how much.
 - **Order book depth.** The cost uses each exchange's quoted spread. Hyperliquid's comes from its $20,000 impact price for BTC and ETH and $6,000 for everything else. Larger orders would pay more.
 - **The other risks.** It ignores margin, liquidation and the time it takes to move money between exchanges.
+- **Other markets.** It covers Binance's crypto perpetuals and Hyperliquid's main perp exchange. Binance's stock and commodity perpetuals and Hyperliquid's builder-deployed exchanges, such as `xyz`, are left out.
 
 ## Tests
 
@@ -66,4 +67,4 @@ Two details catch people out:
 npm test
 ```
 
-Uses Node's built-in test runner, so there is nothing to install.
+Uses Node's built-in test runner, so there is nothing to install. The tests cover each step with hand-built cases, plus one run of the whole pipeline on real responses recorded on 13 October 2026, so a renamed field from either exchange fails the build.

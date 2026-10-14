@@ -8,8 +8,8 @@
   --row-open: #f1f0ea;
   --pos: #137a3c;
   --neg: #b42318;
-  --hl: #0f766e;
-  --bn: #c2410c;
+  --hl: #1d4ed8;
+  --bn: #a8480a;
   --flag-bg: #fdecc8;
   --flag-fg: #7a4a00;
 }
@@ -24,8 +24,8 @@
     --row-open: #1f1f1f;
     --pos: #4ade80;
     --neg: #f87171;
-    --hl: #2dd4bf;
-    --bn: #fb923c;
+    --hl: #7c9cf5;
+    --bn: #f0a060;
     --flag-bg: #3d2e0a;
     --flag-fg: #fcd34d;
   }
@@ -89,7 +89,7 @@ th, td {
 }
 
 th {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
   color: var(--muted);
 }
@@ -104,7 +104,7 @@ tbody tr[data-coin]:hover, tr.open { background: var(--row-open); }
 
 td small {
   display: block;
-  font-size: 12px;
+  font-size: 13px;
   color: var(--muted);
 }
 
@@ -122,7 +122,7 @@ button.coin {
   display: inline-block;
   padding: 1px 8px;
   border-radius: 10px;
-  font-size: 12px;
+  font-size: 13px;
   background: var(--flag-bg);
   color: var(--flag-fg);
 }

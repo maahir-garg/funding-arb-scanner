@@ -1,0 +1,652 @@
+{
+ "binance": {
+  "exchangeInfo": {
+   "symbols": [
+    {
+     "symbol": "BTCUSDT",
+     "pair": "BTCUSDT",
+     "contractType": "PERPETUAL",
+     "deliveryDate": 4133404800000,
+     "onboardDate": 1567965300000,
+     "status": "TRADING",
+     "maintMarginPercent": "2.5000",
+     "requiredMarginPercent": "5.0000",
+     "baseAsset": "BTC",
+     "quoteAsset": "USDT",
+     "marginAsset": "USDT",
+     "pricePrecision": 2,
+     "quantityPrecision": 3,
+     "baseAssetPrecision": 8,
+     "quotePrecision": 8,
+     "underlyingType": "COIN",
+     "underlyingSubType": [
+      "PoW",
+      "Crypto"
+     ],
+     "triggerProtect": "0.0500",
+     "liquidationFee": "0.012500",
+     "marketTakeBound": "0.05",
+     "maxMoveOrderLimit": 10000,
+     "filters": [
+      {
+       "maxPrice": "4529764",
+       "tickSize": "0.10",
+       "filterType": "PRICE_FILTER",
+       "minPrice": "556.80"
+      },
+      {
+       "filterType": "LOT_SIZE",
+       "minQty": "0.001",
+       "maxQty": "1000",
+       "stepSize": "0.001"
+      },
+      {
+       "filterType": "MARKET_LOT_SIZE",
+       "maxQty": "120",
+       "minQty": "0.001",
+       "stepSize": "0.001"
+      },
+      {
+       "limit": 200,
+       "filterType": "MAX_NUM_ORDERS"
+      },
+      {
+       "notional": "50",
+       "filterType": "MIN_NOTIONAL"
+      },
+      {
+       "multiplierDown": "0.9500",
+       "multiplierUp": "1.0500",
+       "filterType": "PERCENT_PRICE",
+       "multiplierDecimal": "4"
+      },
+      {
+       "filterType": "POSITION_RISK_CONTROL",
+       "positionControlSide": "NONE"
+      }
+     ],
+     "orderTypes": [
+      "LIMIT",
+      "MARKET",
+      "STOP",
+      "STOP_MARKET",
+      "TAKE_PROFIT",
+      "TAKE_PROFIT_MARKET",
+      "TRAILING_STOP_MARKET"
+     ],
+     "timeInForce": [
+      "GTC",
+      "IOC",
+      "FOK",
+      "GTX",
+      "GTD"
+     ],
+     "permissionSets": [
+      "GRID",
+      "COPY",
+      "DCA",
+      "PSB"
+     ]
+    },
+    {
+     "symbol": "RSRUSDT",
+     "pair": "RSRUSDT",
+     "contractType": "PERPETUAL",
+     "deliveryDate": 4133404800000,
+     "onboardDate": 1603091100000,
+     "status": "TRADING",
+     "maintMarginPercent": "2.5000",
+     "requiredMarginPercent": "5.0000",
+     "baseAsset": "RSR",
+     "quoteAsset": "USDT",
+     "marginAsset": "USDT",
+     "pricePrecision": 6,
+     "quantityPrecision": 0,
+     "baseAssetPrecision": 8,
+     "quotePrecision": 8,
+     "underlyingType": "COIN",
+     "underlyingSubType": [
+      "DeFi",
+      "Crypto"
+     ],
+     "triggerProtect": "0.1000",
+     "liquidationFee": "0.015000",
+     "marketTakeBound": "0.10",
+     "maxMoveOrderLimit": 10000,
+     "filters": [
+      {
+       "minPrice": "0.000001",
+       "filterType": "PRICE_FILTER",
+       "tickSize": "0.000001",
+       "maxPrice": "10"
+      },
+      {
+       "minQty": "1",
+       "filterType": "LOT_SIZE",
+       "maxQty": "500000000",
+       "stepSize": "1"
+      },
+      {
+       "stepSize": "1",
+       "filterType": "MARKET_LOT_SIZE",
+       "maxQty": "50000000",
+       "minQty": "1"
+      },
+      {
+       "filterType": "MAX_NUM_ORDERS",
+       "limit": 200
+      },
+      {
+       "notional": "5",
+       "filterType": "MIN_NOTIONAL"
+      },
+      {
+       "multiplierUp": "1.1000",
+       "multiplierDown": "0.9000",
+       "filterType": "PERCENT_PRICE",
+       "multiplierDecimal": "4"
+      },
+      {
+       "positionControlSide": "NONE",
+       "filterType": "POSITION_RISK_CONTROL"
+      }
+     ],
+     "orderTypes": [
+      "LIMIT",
+      "MARKET",
+      "STOP",
+      "STOP_MARKET",
+      "TAKE_PROFIT",
+      "TAKE_PROFIT_MARKET",
+      "TRAILING_STOP_MARKET"
+     ],
+     "timeInForce": [
+      "GTC",
+      "IOC",
+      "FOK",
+      "GTX",
+      "GTD"
+     ],
+     "permissionSets": [
+      "GRID",
+      "COPY",
+      "DCA",
+      "PSB"
+     ]
+    },
+    {
+     "symbol": "1000PEPEUSDT",
+     "pair": "1000PEPEUSDT",
+     "contractType": "PERPETUAL",
+     "deliveryDate": 4133404800000,
+     "onboardDate": 1683244800000,
+     "status": "TRADING",
+     "maintMarginPercent": "2.5000",
+     "requiredMarginPercent": "5.0000",
+     "baseAsset": "1000PEPE",
+     "quoteAsset": "USDT",
+     "marginAsset": "USDT",
+     "pricePrecision": 7,
+     "quantityPrecision": 0,
+     "baseAssetPrecision": 8,
+     "quotePrecision": 8,
+     "underlyingType": "COIN",
+     "underlyingSubType": [
+      "Meme",
+      "Crypto"
+     ],
+     "triggerProtect": "0.1500",
+     "liquidationFee": "0.015000",
+     "marketTakeBound": "0.15",
+     "maxMoveOrderLimit": 10000,
+     "filters": [
+      {
+       "tickSize": "0.0000001",
+       "minPrice": "0.0000001",
+       "filterType": "PRICE_FILTER",
+       "maxPrice": "200"
+      },
+      {
+       "filterType": "LOT_SIZE",
+       "minQty": "1",
+       "maxQty": "800000000",
+       "stepSize": "1"
+      },
+      {
+       "minQty": "1",
+       "filterType": "MARKET_LOT_SIZE",
+       "maxQty": "100000000",
+       "stepSize": "1"
+      },
+      {
+       "limit": 200,
+       "filterType": "MAX_NUM_ORDERS"
+      },
+      {
+       "filterType": "MIN_NOTIONAL",
+       "notional": "5"
+      },
+      {
+       "multiplierUp": "1.1500",
+       "filterType": "PERCENT_PRICE",
+       "multiplierDown": "0.8500",
+       "multiplierDecimal": "4"
+      },
+      {
+       "filterType": "POSITION_RISK_CONTROL",
+       "positionControlSide": "NONE"
+      }
+     ],
+     "orderTypes": [
+      "LIMIT",
+      "MARKET",
+      "STOP",
+      "STOP_MARKET",
+      "TAKE_PROFIT",
+      "TAKE_PROFIT_MARKET",
+      "TRAILING_STOP_MARKET"
+     ],
+     "timeInForce": [
+      "GTC",
+      "IOC",
+      "FOK",
+      "GTX",
+      "GTD"
+     ],
+     "permissionSets": [
+      "GRID",
+      "COPY",
+      "RPI",
+      "DCA",
+      "PSB"
+     ]
+    },
+    {
+     "symbol": "WLDUSDT",
+     "pair": "WLDUSDT",
+     "contractType": "PERPETUAL",
+     "deliveryDate": 4133404800000,
+     "onboardDate": 1690200000000,
+     "status": "TRADING",
+     "maintMarginPercent": "2.5000",
+     "requiredMarginPercent": "5.0000",
+     "baseAsset": "WLD",
+     "quoteAsset": "USDT",
+     "marginAsset": "USDT",
+     "pricePrecision": 7,
+     "quantityPrecision": 0,
+     "baseAssetPrecision": 8,
+     "quotePrecision": 8,
+     "underlyingType": "COIN",
+     "underlyingSubType": [
+      "AI",
+      "Crypto"
+     ],
+     "triggerProtect": "0.1500",
+     "liquidationFee": "0.015000",
+     "marketTakeBound": "0.15",
+     "maxMoveOrderLimit": 10000,
+     "filters": [
+      {
+       "maxPrice": "200",
+       "filterType": "PRICE_FILTER",
+       "tickSize": "0.0001000",
+       "minPrice": "0.0001000"
+      },
+      {
+       "filterType": "LOT_SIZE",
+       "stepSize": "1",
+       "minQty": "1",
+       "maxQty": "20000000"
+      },
+      {
+       "filterType": "MARKET_LOT_SIZE",
+       "minQty": "1",
+       "stepSize": "1",
+       "maxQty": "700000"
+      },
+      {
+       "limit": 200,
+       "filterType": "MAX_NUM_ORDERS"
+      },
+      {
+       "notional": "5",
+       "filterType": "MIN_NOTIONAL"
+      },
+      {
+       "multiplierUp": "1.1500",
+       "multiplierDecimal": "4",
+       "multiplierDown": "0.8500",
+       "filterType": "PERCENT_PRICE"
+      },
+      {
+       "filterType": "POSITION_RISK_CONTROL",
+       "positionControlSide": "NONE"
+      }
+     ],
+     "orderTypes": [
+      "LIMIT",
+      "MARKET",
+      "STOP",
+      "STOP_MARKET",
+      "TAKE_PROFIT",
+      "TAKE_PROFIT_MARKET",
+      "TRAILING_STOP_MARKET"
+     ],
+     "timeInForce": [
+      "GTC",
+      "IOC",
+      "FOK",
+      "GTX",
+      "GTD"
+     ],
+     "permissionSets": [
+      "GRID",
+      "COPY",
+      "DCA",
+      "PSB"
+     ]
+    }
+   ]
+  },
+  "premiumIndex": [
+   {
+    "symbol": "1000PEPEUSDT",
+    "markPrice": "0.00395592",
+    "indexPrice": "0.00395945",
+    "estimatedSettlePrice": "0.00396505",
+    "lastFundingRate": "-0.00031906",
+    "interestRate": "0.00010000",
+    "nextFundingTime": 1791878400000,
+    "time": 1791859416000
+   },
+   {
+    "symbol": "BTCUSDT",
+    "markPrice": "82814.50378986",
+    "indexPrice": "82848.16608696",
+    "estimatedSettlePrice": "82770.44608309",
+    "lastFundingRate": "0.00002283",
+    "interestRate": "0.00010000",
+    "nextFundingTime": 1791878400000,
+    "time": 1791859416000
+   },
+   {
+    "symbol": "WLDUSDT",
+    "markPrice": "0.50534943",
+    "indexPrice": "0.50577993",
+    "estimatedSettlePrice": "0.50508489",
+    "lastFundingRate": "-0.00014033",
+    "interestRate": "0.00010000",
+    "nextFundingTime": 1791878400000,
+    "time": 1791859416000
+   },
+   {
+    "symbol": "RSRUSDT",
+    "markPrice": "0.00200699",
+    "indexPrice": "0.00202712",
+    "estimatedSettlePrice": "0.00202587",
+    "lastFundingRate": "-0.01246036",
+    "interestRate": "0.00010000",
+    "nextFundingTime": 1791878400000,
+    "time": 1791859416000
+   }
+  ],
+  "fundingInfo": [
+   {
+    "symbol": "1000PEPEUSDT",
+    "adjustedFundingRateCap": "0.02000000",
+    "adjustedFundingRateFloor": "-0.02000000",
+    "fundingIntervalHours": 8,
+    "disclaimer": false,
+    "updateTime": 1697703241715
+   },
+   {
+    "symbol": "RSRUSDT",
+    "adjustedFundingRateCap": "0.02000000",
+    "adjustedFundingRateFloor": "-0.02000000",
+    "fundingIntervalHours": 8,
+    "disclaimer": false,
+    "updateTime": 1758379372399
+   },
+   {
+    "symbol": "WLDUSDT",
+    "adjustedFundingRateCap": "0.02000000",
+    "adjustedFundingRateFloor": "-0.02000000",
+    "fundingIntervalHours": 8,
+    "disclaimer": false,
+    "updateTime": 1760927667776
+   },
+   {
+    "symbol": "BTCUSDT",
+    "adjustedFundingRateCap": "0.00300",
+    "adjustedFundingRateFloor": "-0.00300",
+    "fundingIntervalHours": 8,
+    "disclaimer": true,
+    "updateTime": null
+   }
+  ],
+  "tickers": [
+   {
+    "closeTime": 1791859411090,
+    "count": 4159966,
+    "firstId": 446871370,
+    "highPrice": "0.002589",
+    "lastId": 451032884,
+    "lastPrice": "0.002007",
+    "lastQty": "6429",
+    "lowPrice": "0.001648",
+    "openPrice": "0.001648",
+    "openTime": 1791772980000,
+    "priceChange": "0.000359",
+    "priceChangePercent": "21.784",
+    "quoteVolume": "557564922.786451",
+    "symbol": "RSRUSDT",
+    "volume": "242544748473",
+    "weightedAvgPrice": "0.002299"
+   },
+   {
+    "closeTime": 1791859411006,
+    "count": 3217644,
+    "firstId": 8163734509,
+    "highPrice": "84340.20",
+    "lastId": 8166964346,
+    "lastPrice": "82812.60",
+    "lastQty": "0.001",
+    "lowPrice": "80985.00",
+    "openPrice": "83830.00",
+    "openTime": 1791772980000,
+    "priceChange": "-1017.40",
+    "priceChangePercent": "-1.214",
+    "quoteVolume": "13623228832.30",
+    "symbol": "BTCUSDT",
+    "volume": "164605.600",
+    "weightedAvgPrice": "82762.85"
+   },
+   {
+    "closeTime": 1791859411102,
+    "count": 1440127,
+    "firstId": 2824562625,
+    "highPrice": "0.0043321",
+    "lastId": 2826007393,
+    "lastPrice": "0.0039571",
+    "lastQty": "25329",
+    "lowPrice": "0.0037601",
+    "openPrice": "0.0042130",
+    "openTime": 1791772980000,
+    "priceChange": "-0.0002559",
+    "priceChangePercent": "-6.074",
+    "quoteVolume": "250687098.2615255",
+    "symbol": "1000PEPEUSDT",
+    "volume": "61395936186",
+    "weightedAvgPrice": "0.0040831"
+   },
+   {
+    "closeTime": 1791859410768,
+    "count": 1003663,
+    "firstId": 1383199791,
+    "highPrice": "0.5630000",
+    "lastId": 1384206320,
+    "lastPrice": "0.5054000",
+    "lastQty": "33",
+    "lowPrice": "0.4725000",
+    "openPrice": "0.5545000",
+    "openTime": 1791772980000,
+    "priceChange": "-0.0491000",
+    "priceChangePercent": "-8.855",
+    "quoteVolume": "306067090.1508000",
+    "symbol": "WLDUSDT",
+    "volume": "586107052",
+    "weightedAvgPrice": "0.5222034"
+   }
+  ],
+  "bookTickers": [
+   {
+    "symbol": "BTCUSDT",
+    "bidPrice": "82812.60",
+    "bidQty": "2.976",
+    "askPrice": "82812.70",
+    "askQty": "3.738",
+    "time": 1791859417766,
+    "lastUpdateId": 11801986804202
+   },
+   {
+    "symbol": "RSRUSDT",
+    "bidPrice": "0.002006",
+    "bidQty": "453589",
+    "askPrice": "0.002007",
+    "askQty": "715260",
+    "time": 1791859417738,
+    "lastUpdateId": 11801986802449
+   },
+   {
+    "symbol": "1000PEPEUSDT",
+    "bidPrice": "0.0039557",
+    "bidQty": "87563",
+    "askPrice": "0.0039558",
+    "askQty": "577808",
+    "time": 1791859417140,
+    "lastUpdateId": 11801986746514
+   },
+   {
+    "symbol": "WLDUSDT",
+    "bidPrice": "0.5050000",
+    "bidQty": "2715",
+    "askPrice": "0.5051000",
+    "askQty": "27694",
+    "time": 1791859417739,
+    "lastUpdateId": 11801986802547
+   }
+  ]
+ },
+ "hyperliquid": [
+  {
+   "universe": [
+    {
+     "szDecimals": 5,
+     "name": "BTC",
+     "maxLeverage": 40,
+     "marginTableId": 56
+    },
+    {
+     "szDecimals": 0,
+     "name": "kPEPE",
+     "maxLeverage": 10,
+     "marginTableId": 52
+    },
+    {
+     "szDecimals": 1,
+     "name": "WLD",
+     "maxLeverage": 10,
+     "marginTableId": 52
+    },
+    {
+     "szDecimals": 0,
+     "name": "RSR",
+     "maxLeverage": 3,
+     "marginTableId": 3
+    },
+    {
+     "szDecimals": 1,
+     "name": "MATIC",
+     "maxLeverage": 20,
+     "marginTableId": 20,
+     "isDelisted": true
+    }
+   ]
+  },
+  [
+   {
+    "funding": "0.0000027048",
+    "openInterest": "37719.12912",
+    "prevDayPx": "83852.0",
+    "dayNtlVlm": "2873014160.9360947609",
+    "premium": "-0.0005069525",
+    "oraclePx": "82848.0",
+    "markPx": "82807.2",
+    "midPx": "82805.5",
+    "impactPxs": [
+     "82805.0",
+     "82806.0"
+    ],
+    "dayBaseVlm": "34731.2645"
+   },
+   {
+    "funding": "-0.0000115256",
+    "openInterest": "6338928300.0",
+    "prevDayPx": "0.004217",
+    "dayNtlVlm": "8231552.8241619989",
+    "premium": "-0.0005053057",
+    "oraclePx": "0.003958",
+    "markPx": "0.003955",
+    "midPx": "0.003955",
+    "impactPxs": [
+     "0.003955",
+     "0.003956"
+    ],
+    "dayBaseVlm": "2046144605.0"
+   },
+   {
+    "funding": "0.0000125",
+    "openInterest": "138714864.2000000477",
+    "prevDayPx": "0.55603",
+    "dayNtlVlm": "31163590.091170989",
+    "premium": "-0.0008304498",
+    "oraclePx": "0.50575",
+    "markPx": "0.50545",
+    "midPx": "0.50519",
+    "impactPxs": [
+     "0.50503",
+     "0.50533"
+    ],
+    "dayBaseVlm": "59400768.3999999985"
+   },
+   {
+    "funding": "-0.0014850464",
+    "openInterest": "1977737198.0",
+    "prevDayPx": "0.001651",
+    "dayNtlVlm": "10775612.2123949975",
+    "premium": "-0.0123334978",
+    "oraclePx": "0.002027",
+    "markPx": "0.002001",
+    "midPx": "0.001999",
+    "impactPxs": [
+     "0.001996",
+     "0.002002"
+    ],
+    "dayBaseVlm": "4839147649.0"
+   },
+   {
+    "funding": "0.0",
+    "openInterest": "0.0",
+    "prevDayPx": "0.37621",
+    "dayNtlVlm": "0.0",
+    "premium": null,
+    "oraclePx": "0.3754",
+    "markPx": "0.37621",
+    "midPx": null,
+    "impactPxs": null,
+    "dayBaseVlm": "0.0"
+   }
+  ]
+ ]
+}
